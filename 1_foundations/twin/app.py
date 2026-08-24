@@ -34,10 +34,12 @@ def chat(message, history):
 
 
 if __name__ == "__main__":
-    gr.ChatInterface(
-        chat,
-        examples=EXAMPLES,
-        title="Digital Twin",
-        description="Talk to my AI twin about my career",
-        chatbot=gr.Chatbot(show_label=False),
-    ).launch(css=CSS, js=JS, theme=gr.themes.Base())
+    with gr.Blocks(css=CSS, js=JS, theme=gr.themes.Base()) as demo:
+        gr.ChatInterface(
+            chat,
+            examples=EXAMPLES,
+            title="Digital Twin",
+            description="Talk to my AI twin about my career",
+            chatbot=gr.Chatbot(show_label=False),
+        )
+    demo.launch()
