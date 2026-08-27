@@ -14,6 +14,24 @@ class WebSearchItem(BaseModel):
 
 class WebSearchPlan(BaseModel):
     searches: list[WebSearchItem] = Field(description="A list of web searches to perform to best answer the query.")
+
+from dotenv import load_dotenv
+import os
+load_dotenv(override=True)
+
+from openai import AsyncOpenAI
+from agents import set_default_openai_client, set_tracing_disabled
+
+
+# Pass base_url to the OpenAI client instance
+custom_client = AsyncOpenAI(
+    api_key=os.getenv("ZHIZHENG_API_KEY"),
+    base_url="https://api.zhizengzeng.com/v1/"
+)
+
+set_default_openai_client(custom_client, use_for_tracing=False)
+# Tracing uploads to platform.openai.com, which is not reachable from HK.
+set_tracing_disabled(True)
     
 planner_agent = Agent(
     name="PlannerAgent",

@@ -6,12 +6,20 @@ import time
 import json
 import time
 
-API_SECRET_KEY = "sk-zk289953c1e2db3a772a733ecfce902cf6c6a8ea15100233";
-BASE_URL = "https://api.zhizengzeng.com/v1/"
+
+from dotenv import load_dotenv
+import os
+load_dotenv(override=True)
+
+
+# Pass base_url to the OpenAI client instance
+client = OpenAI(
+    api_key=os.getenv("ZHIZHENG_API_KEY"),
+    base_url="https://api.zhizengzeng.com/v1/"
+)
 
 # chat
-def chat_completions3(query):
-    client = OpenAI(api_key=API_SECRET_KEY, base_url=BASE_URL)
+def chat_completions3(query):    
     resp = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
