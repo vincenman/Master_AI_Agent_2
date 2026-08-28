@@ -3,10 +3,40 @@ import sys
 import warnings
 
 from datetime import datetime
+from pathlib import Path
+
+import markdown as md
 
 from researcher.crew import Researcher
+from xhtml2pdf import pisa
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+
+
+def _export_pdf(markdown_text: str, out_dir: str = "output") -> Path:
+    """Convert the markdown report to a timestamped PDF (ddmmyyyy_hhmmss) for later reference."""
+    out_path = Path(out_dir)
+    out_path.mkdir(exist_ok=True)
+    stamp = datetime.now().strftime("%d%m%Y_%H%M%S")
+    pdf_path = out_path / f"report_{stamp}.pdf"
+
+    html_body = md.markdown(markdown_text, extensions=["extra"])
+    html = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>
+    @page {{ size: A4; margin: 2cm; }}
+    body {{ font-family: Helvetica, Arial, sans-serif; font-size: 11pt; line-height: 1.5; }}
+    h1 {{ font-size: 18pt; }} h2 {{ font-size: 14pt; }} h3 {{ font-size: 12pt; }}
+    pre {{ font-size: 9pt; white-space: pre-wrap; }}
+    table, th, td {{ border: 1px solid #999; border-collapse: collapse; padding: 4px; }}
+</style></head>
+<body>{html_body}</body></html>"""
+
+    with open(pdf_path, "wb") as f:
+        pdf = pisa.CreatePDF(html, dest=f)
+    if pdf.err:
+        raise RuntimeError(f"PDF conversion failed: {pdf.err}")
+    return pdf_path
 
 # This main file is intended to be a way for you to run your
 # crew locally, so refrain from adding unnecessary logic into this file.
@@ -23,7 +53,9 @@ def run():
     }
 
     try:
-        Researcher().crew().kickoff(inputs=inputs)
+        result = Researcher().crew().kickoff(inputs=inputs)
+        pdf_path = _export_pdf(result.raw)
+        print(f"\nReport saved to PDF: {pdf_path}")
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
