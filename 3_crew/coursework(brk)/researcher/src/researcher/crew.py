@@ -1,20 +1,6 @@
-import os
-
-from crewai import Agent, Crew, LLM, Process, Task
+from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-
-
-def _proxy_llm() -> LLM:
-    """LLM routed through the zhizengzeng OpenAI-compatible proxy (HK access)."""
-    model = os.getenv("OPENAI_MODEL_NAME", "gpt-3.5-turbo")
-    if "/" not in model:
-        model = f"openai/{model}"
-    return LLM(
-        model=model,
-        base_url=os.getenv("OPENAI_BASE_URL", "https://api.zhizengzeng.com/v1/"),
-        api_key=os.getenv("ZHIZHENG_API_KEY") or os.getenv("OPENAI_API_KEY"),
-    )
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -36,7 +22,6 @@ class Researcher():
     def researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['researcher'], # type: ignore[index]
-            llm=_proxy_llm(),
             verbose=True
         )
 
@@ -44,7 +29,6 @@ class Researcher():
     def reporting_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['reporting_analyst'], # type: ignore[index]
-            llm=_proxy_llm(),
             verbose=True
         )
 
