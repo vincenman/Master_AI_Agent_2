@@ -1,0 +1,43 @@
+# src/research_crew/config/tasks.yaml
+research_task:
+  description: >
+    Conduct thorough research on company {company}. Focus on:
+    1. Current company status and health
+    2. Historical company performance
+    3. Major challenges and opportunities
+    4. Recent news and events
+    5. Future outlook and potential developments
+    Important: your information MUST be up to date and relevant to now. {current_date}
+    Make sure to organize your findings in a structured format with clear sections.
+  expected_output: >
+    A comprehensive research document with well-organized sections covering
+    all the requested aspects of {company}. Include specific facts, figures,
+    and examples where relevant.
+  agent: researcher
+
+analysis_task:
+  description: >
+    Analyze the research findings and create a comprehensive report on {company}.
+    Write the ENTIRE report in Traditional Chinese (繁體中文), using
+    professional financial terminology. Your report should:
+    1. Begin with an executive summary (摘要)
+    2. Include all key information from the research
+    3. Provide insightful analysis of trends and patterns
+    4. Offer a market outlook for company, noting that this should not be used for trading decisions
+    5. Be formatted in a professional, easy-to-read style with clear headings
+    Markdown formatting requirements:
+    - Use ## headings for main sections and ### for subsections
+    - Wrap the most important figures, prices, and conclusions in ==double equals signs==
+      (e.g. ==每股盈餘 EPS 為 6.29 美元==) so they can be highlighted in the final PDF
+    - Use **bold** for key terms and data points
+    - Use tables for financial data comparisons and bullet lists for details
+  expected_output: >
+    A polished, professional report on {company} written entirely in Traditional
+    Chinese (繁體中文), presenting the research findings with added analysis and
+    insights. The report must be well-structured with an executive summary, main
+    sections (using ## and ### headings), tables, and a conclusion, with important
+    figures wrapped in ==double equals signs== for highlighting.
+  agent: analyst
+  context:
+    - research_task
+  output_file: output/report.md
