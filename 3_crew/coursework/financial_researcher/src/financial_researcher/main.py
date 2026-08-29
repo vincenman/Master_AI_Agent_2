@@ -14,6 +14,37 @@ from financial_researcher.crew import FinancialResearcher
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
+
+def _patch_cjk_line_drawing():
+    """Coerce mixed str/bytes words in xhtml2pdf's CJK paragraph line drawing.
+
+    xhtml2pdf 0.2.17 mixes str and bytes in the word lists produced by its CJK
+    line-breaking code (e.g. for page-split continuations of paragraphs with
+    inline markup), and its *_DrawParaLine helpers then crash doing
+    b" ".join(words). The helpers are resolved from the module at draw time,
+    so wrapping them here is sufficient and keeps the venv library untouched.
+    """
+    import xhtml2pdf.reportlab_paragraph as rp
+
+    def _as_bytes(words):
+        return [w.encode("utf-8") if isinstance(w, str) else w for w in words]
+
+    for _name in (
+        "_leftDrawParaLine",
+        "_centerDrawParaLine",
+        "_rightDrawParaLine",
+        "_justifyDrawParaLine",
+    ):
+        _orig = getattr(rp, _name)
+
+        def _patched(tx, offset, extraspace, words, last=0, _orig=_orig):
+            return _orig(tx, offset, extraspace, _as_bytes(words), last)
+
+        setattr(rp, _name, _patched)
+
+
+_patch_cjk_line_drawing()
+
 # --- Traditional Chinese PDF export -------------------------------------------
 # Microsoft JhengHei (微軟正黑體) ships with Windows. xhtml2pdf only resolves
 # font families listed in its DEFAULT_FONT table, and its @font-face loader is
