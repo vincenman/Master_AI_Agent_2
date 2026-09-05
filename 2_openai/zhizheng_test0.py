@@ -19,7 +19,8 @@ client = OpenAI(
 )
 
 # chat
-def chat_completions3(query):    
+def chat_completions3(query):
+    
     resp = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[

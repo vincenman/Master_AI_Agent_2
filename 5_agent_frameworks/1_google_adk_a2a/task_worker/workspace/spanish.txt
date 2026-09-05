@@ -1,3 +1,3 @@
-Bienvenido al equipo.
+Bienvenidos al equipo.
 
-Hoy estamos construyendo un pequeño tutor de idiomas, pieza por pieza. Cada ayudante elige una única tarea del tablero compartido, realiza el trabajo cuidadosamente y marca la tarea como hecha. Lea su tarea atentamente, tómese su tiempo y haga su mejor esfuerzo.
+Hoy estamos construyendo un pequeño tutor de idiomas, pieza por pieza. Cada asistente elige una sola tarea del tablero compartido, hace el trabajo con cuidado y marca la tarea como hecha. Lean su tarea detenidamente, tómense su tiempo y hagan su mejor esfuerzo.
