@@ -16,7 +16,9 @@ TIMEOUT = 120
 if massive_api_key:
     market_params = {
         "command": "uvx",
-        "args": ["--from", "git+https://github.com/massive-com/mcp_massive@v0.10.0", "mcp_massive"],
+        # mcp_massive is built against the mcp 1.x API (FastMCP); pin mcp<2 or the
+        # fresh uvx environment resolves mcp 2.x and the server crashes at startup.
+        "args": ["--with", "mcp<2", "--from", "git+https://github.com/massive-com/mcp_massive@v0.10.0", "mcp_massive"],
         "env": {"MASSIVE_API_KEY": massive_api_key},
     }
 else:
